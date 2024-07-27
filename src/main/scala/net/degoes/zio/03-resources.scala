@@ -21,7 +21,7 @@ object Cat extends ZIOAppDefault {
    * it helpful to use the `getScalaSource` helper method defined above.
    */
   def readFile(file: String): ZIO[Any, IOException, String] =
-    ???
+    ZIO.attemptBlockingIO(getScalaSource(file).mkString)
 
   /**
    * EXERCISE
@@ -30,7 +30,11 @@ object Cat extends ZIOAppDefault {
    * contents of the specified file to standard output.
    */
   val run =
-    ???
+    for {
+      args <- getArgs
+      contents <- readFile(args.head)
+      _ <- Console.printLine(contents)
+    } yield ()
 }
 
 object CatEnsuring extends ZIOAppDefault {
@@ -54,7 +58,7 @@ object CatEnsuring extends ZIOAppDefault {
     ZIO.uninterruptible {
       for {
         source   <- open(file)
-        contents <- ZIO.attempt(source.getLines().mkString("\n"))
+        contents <- ZIO.attempt(source.getLines().mkString("\n")).ensuring(close(source).orDie)
       } yield contents
     }.refineToOrDie[IOException]
 

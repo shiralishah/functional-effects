@@ -170,7 +170,7 @@ object PrintSequenceZip extends ZIOAppDefault {
    * that prints three lines of text to the console.
    */
   val run =
-    Console.printLine("Hi!") zip Console.printLine("Hello") zip Console.printLine("Hey")
+    Console.printLine("Hi") zip Console.printLine("Hello") zip Console.printLine("Hey")
 }
 
 object PrintSequence extends ZIOAppDefault {
